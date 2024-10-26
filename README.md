@@ -48,7 +48,3 @@ cargo run -- setup
 ```
 
 This command initiates the setup process, installing all required components for your development environment.
-
-## License
-
-This project is licensed under the MIT License.
