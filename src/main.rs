@@ -1,3 +1,4 @@
+mod projects;
 mod setup;
 
 use clap::{Parser, Subcommand};
@@ -13,6 +14,8 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     Setup,
+    Init { project: projects::Projects },
+    List,
 }
 
 fn main() {
@@ -22,5 +25,7 @@ fn main() {
         Commands::Setup => {
             setup::setup();
         }
+        Commands::Init { project } => projects::init(project),
+        Commands::List => projects::list(),
     }
 }
