@@ -1,3 +1,4 @@
+use crate::git::GitClient;
 use core::fmt;
 use serde::Serialize;
 use std::{
@@ -44,4 +45,6 @@ pub fn list() {
 
 pub fn init(project: &Projects) {
     project.init();
+    let gitclient = GitClient::new();
+    println!("Found token {}", gitclient.token)
 }

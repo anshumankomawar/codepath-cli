@@ -44,6 +44,5 @@ impl Installer {
 pub fn setup() {
     let installer = Installer::new();
     info!("Setting up your dev environment...");
-
     installer.setup_environment().unwrap();
 }
