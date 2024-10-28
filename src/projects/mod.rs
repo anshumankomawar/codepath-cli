@@ -1,50 +1,35 @@
-use crate::git::GitClient;
-use core::fmt;
+mod tutor;
+
+use async_trait::async_trait;
 use serde::Serialize;
-use std::{
-    fmt::{Display, Formatter},
-    str::FromStr,
-};
+use tutor::Tutor;
 
-#[derive(Clone, Serialize)]
-pub enum Projects {
-    PythonTutor,
+#[async_trait]
+pub trait Project {
+    async fn authenticate(&self);
+    async fn init(&self);
 }
 
-impl FromStr for Projects {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "PythonTutor" => Ok(Projects::PythonTutor),
-            _ => Err("Project not found".to_string()),
-        }
-    }
-}
-
-impl Display for Projects {
-    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        match self {
-            Projects::PythonTutor => write!(f, "- Python Tutor"),
-        }
-    }
-}
-
-impl Projects {
-    pub fn init(&self) {
-        match self {
-            Projects::PythonTutor => println!("Setting up Python Tutor project..."),
-        }
-    }
+#[derive(Debug, Clone, Serialize)]
+pub enum Lang {
+    Python,
+    Rust,
+    JavaScript,
 }
 
 pub fn list() {
     println!("Available projects:");
-    println!("{}", Projects::PythonTutor);
+    println!("{}", Tutor { lang: Lang::Python });
 }
 
-pub fn init(project: &Projects) {
-    project.init();
-    let gitclient = GitClient::new();
-    println!("Found token {}", gitclient.token)
+pub async fn init(project: &str) {
+    let project: Box<dyn Project> = match project {
+        "tutor" => Box::new(Tutor { lang: Lang::Python }),
+        _ => {
+            println!("Project not found");
+            return;
+        }
+    };
+
+    project.init().await;
 }

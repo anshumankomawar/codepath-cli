@@ -3,6 +3,7 @@ mod projects;
 mod setup;
 
 use clap::{Parser, Subcommand};
+use keyring::Entry;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -12,21 +13,30 @@ struct Cli {
     command: Commands,
 }
 
-#[derive(Subcommand)]
+#[derive(Subcommand, PartialEq)]
 enum Commands {
+    Auth,
     Setup,
-    Init { project: projects::Projects },
+    Init { project: String },
     List,
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let cli = Cli::parse();
+    let entry = Entry::new("codepath", "auth").unwrap();
+    if entry.get_password().is_err() && cli.command != Commands::Auth {
+        git::authenticate_user().await;
+    }
 
     match &cli.command {
+        Commands::Auth => {
+            git::authenticate_user().await;
+        }
         Commands::Setup => {
             setup::setup();
         }
-        Commands::Init { project } => projects::init(project),
+        Commands::Init { project } => projects::init(project).await,
         Commands::List => projects::list(),
     }
 }
