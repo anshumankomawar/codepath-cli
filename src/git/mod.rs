@@ -60,13 +60,13 @@ async fn get_device_code(client: &Client) -> Result<DeviceCodeResponse, Box<dyn 
     Ok(device_code_response)
 }
 
-pub async fn create_repository_from_template(
+pub fn create_repository_from_template(
     org: &str,
     template_repo: &str,
     new_repo_name: &str,
     user_token: &str,
 ) -> Result<(), Box<dyn Error>> {
-    let client = Client::new();
+    let client = reqwest::blocking::Client::new();
 
     let url = format!(
         "https://api.github.com/repos/{}/{}/generate",
@@ -88,8 +88,7 @@ pub async fn create_repository_from_template(
         .header("Accept", "application/vnd.github.v3+json")
         .headers(headers)
         .json(&request_body)
-        .send()
-        .await?;
+        .send()?;
 
     if response.status().is_success() {
         println!(
@@ -97,7 +96,7 @@ pub async fn create_repository_from_template(
             new_repo_name, template_repo
         );
     } else {
-        let error_message = response.text().await?;
+        let error_message = response.text()?;
         eprintln!("Failed to create repository: {}", error_message);
     }
 

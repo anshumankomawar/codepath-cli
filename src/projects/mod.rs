@@ -1,13 +1,11 @@
 mod tutor;
 
-use async_trait::async_trait;
 use serde::Serialize;
 use tutor::Tutor;
 
-#[async_trait]
 pub trait Project {
-    async fn authenticate(&self);
-    async fn init(&self);
+    fn authenticate(&self);
+    fn init(&self);
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -31,5 +29,5 @@ pub async fn init(project: &str) {
         }
     };
 
-    project.init().await;
+    project.init();
 }

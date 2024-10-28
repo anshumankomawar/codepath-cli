@@ -36,7 +36,9 @@ async fn main() {
         Commands::Setup => {
             setup::setup();
         }
-        Commands::Init { project } => projects::init(project).await,
+        Commands::Init { project } => {
+            projects::init(project);
+        }
         Commands::List => projects::list(),
     }
 }
