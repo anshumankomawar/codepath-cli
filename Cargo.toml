@@ -1,3 +1,9 @@
+[workspace]
+members = [
+    "server",
+    "cli",
+]
+
 [package]
 name = "codepath-cli"
 version = "0.1.0"
@@ -13,3 +19,5 @@ reqwest = { version = "0.11", features = ["blocking", "json"] }
 keyring = { version = "3", features = ["apple-native", "windows-native", "sync-secret-service"] }
 serde_json = "1.0.132"
 anyhow = "1.0.91"
+axum = "0.7.7"
+
